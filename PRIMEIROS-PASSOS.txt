@@ -1,0 +1,44 @@
+ETAPA 1 - LARAVEL E POSTGRESQL EXISTENTE
+
+Projeto criado com Composer, sem executar scripts automaticos de migrations.
+As tabelas existentes nao foram alteradas.
+
+1. Abra .env no editor.
+2. DB_PASSWORD ja foi preenchido localmente e a conexao foi testada.
+   Use aspas duplas em torno do valor; nao envie a senha no chat.
+   Nao publique .env (ele ja esta ignorado pelo Git).
+3. Abra PowerShell nesta pasta e execute:
+
+   .\laravel-local.ps1 banco:verificar
+
+O comando abre uma transacao READ ONLY, consulta as quatro tabelas,
+consulta pessoa pelo Eloquent e encerra com rollback.
+Ele mostra somente contagens, sem exibir dados pessoais.
+
+Para iniciar o servidor de desenvolvimento local:
+
+   .\laravel-local.ps1 serve --host=127.0.0.1 --port=8000
+
+Abra http://127.0.0.1:8000 no navegador. Por enquanto e a pagina inicial
+do Laravel; telas de cadastros e Vue ainda serao construidos.
+Para parar o servidor use Ctrl+C.
+
+O QUE CADA ARQUIVO FAZ
+.env: configuracao local da aplicacao e da conexao.
+config/database.php: usa DB_SCHEMA para localizar as tabelas em esdras.
+app/Models/Pessoa.php: representa a tabela pessoa para o Eloquent.
+routes/console.php: contem o comando banco:verificar.
+php-local.ini: extensoes PHP locais, incluindo pdo_pgsql.
+laravel-local.ps1: executa PHP com esse arquivo de configuracao.
+
+Banco: controle_revisoes. Host: ::1. Porta: 5432. Usuario: postgres.
+Schema confirmado por consulta: esdras (com s no final).
+Teste de leitura: 2 pessoas, 2 marcas, 1 carro, 0 revisoes.
+Sessoes e cache usam arquivos; filas usam sync, para dispensar tabelas extras.
+
+Nao execute migrate, migrate:fresh ou composer setup nesta etapa.
+As migrations padrao do Laravel ainda nao representam seu banco manual.
+A reproducao do schema por migrations sera uma etapa posterior.
+
+O php-local.ini aponta para o PHP instalado neste computador.
+Em outra maquina sera preciso ajustar esse caminho ou usar Docker.

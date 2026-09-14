@@ -1,0 +1,86 @@
+{
+  "veiculos": {
+    "title": "Todos os veículos",
+    "chart": "Veículos por marca",
+    "mode": "count",
+    "label": "marca",
+    "value": null
+  },
+  "veiculos-pessoa": {
+    "title": "Veículos por pessoa",
+    "chart": "Veículos por proprietário",
+    "mode": "count",
+    "label": "proprietario",
+    "value": null
+  },
+  "veiculos-genero": {
+    "title": "Veículos por gênero",
+    "chart": "Quantidade de veículos",
+    "mode": "values",
+    "label": "genero",
+    "value": "total"
+  },
+  "marcas-veiculos": {
+    "title": "Marcas por quantidade de veículos",
+    "chart": "Veículos por marca",
+    "mode": "values",
+    "label": "marca",
+    "value": "total"
+  },
+  "marcas-genero": {
+    "title": "Marcas e gênero dos proprietários",
+    "chart": "Veículos por marca e gênero",
+    "mode": "gender",
+    "label": "marca",
+    "value": null
+  },
+  "pessoas": {
+    "title": "Todas as pessoas",
+    "chart": "Pessoas por gênero",
+    "mode": "count",
+    "label": "genero",
+    "value": null
+  },
+  "pessoas-genero": {
+    "title": "Pessoas por gênero e idade média",
+    "chart": "Idade média por gênero (anos)",
+    "mode": "unique",
+    "label": "genero",
+    "value": "idade_media"
+  },
+  "revisoes-periodo": {
+    "title": "Revisões no período",
+    "chart": "Revisões por dia",
+    "mode": "count",
+    "label": "data_revisao",
+    "value": null
+  },
+  "marcas-revisoes": {
+    "title": "Marcas com mais revisões",
+    "chart": "Revisões por marca",
+    "mode": "values",
+    "label": "marca",
+    "value": "total"
+  },
+  "pessoas-revisoes": {
+    "title": "Pessoas com mais revisões",
+    "chart": "Revisões por pessoa",
+    "mode": "values",
+    "label": "nome",
+    "value": "total"
+  },
+  "intervalos": {
+    "title": "Intervalo médio entre revisões",
+    "chart": "Intervalo médio por pessoa (dias)",
+    "mode": "values",
+    "label": "nome",
+    "value": "media_dias"
+  },
+  "proximas": {
+    "title": "Previsão das próximas revisões",
+    "chart": "Intervalo estimado por pessoa (dias)",
+    "mode": "values",
+    "label": "nome",
+    "value": "media_dias"
+  }
+}

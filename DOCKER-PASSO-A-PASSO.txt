@@ -1,0 +1,77 @@
+DOCKER - PRIMEIRA ETAPA
+
+ATUALIZACAO: Compose agora preparado com PostgreSQL em container.
+Este arquivo preserva a primeira etapa usando o banco Windows.
+Siga POSTGRES-DOCKER.txt para o estado mais recente.
+
+STATUS: usuario executou o build e iniciou o container com sucesso.
+Verificacao de leitura dentro do container retornou banco controle_revisoes,
+schema esdras, 2 pessoas, 2 marcas, 1 carro e 0 revisoes.
+Eloquent consultou pessoa e retornou 2 registros.
+Pagina inicial no navegador ainda nao confirmada pelo usuario.
+
+O QUE MUDA
+Antes: PHP do Windows -> PostgreSQL do Windows.
+Agora: PHP/Laravel no container -> PostgreSQL do Windows.
+O banco continua controle_revisoes, schema esdras; nao ha migracao de dados.
+
+ARQUIVOS
+Dockerfile: receita da imagem com PHP, extensoes, Composer e aplicacao.
+compose.yaml: descreve como iniciar o container e conectar arquivos/porta.
+.dockerignore: impede copiar senhas, vendor do Windows e caches para a imagem.
+.env: continua guardando a senha local; nao entra na imagem Docker.
+
+PASSO A PASSO
+1. Abra Docker Desktop no menu Iniciar e aguarde o mecanismo ficar pronto.
+   Use Linux containers. Se pedir configuracao de WSL, siga a orientacao
+   do instalador e envie qualquer erro antes de mudar outras configuracoes.
+2. Abra PowerShell na pasta que contem artisan, Dockerfile e compose.yaml.
+3. Confira:
+
+   docker version
+   docker compose version
+
+Se docker nao for reconhecido, feche/reabra o terminal. Se persistir,
+adicione somente para essa sessao:
+
+   $env:Path += ";$env:LOCALAPPDATA\Programs\DockerDesktop\resources\bin"
+
+4. Confira os arquivos e construa/inicie:
+
+   docker compose config --quiet
+   docker compose up -d --build
+
+O primeiro build baixa imagens e instala dependencias; pode demorar.
+Se a porta 8000 estiver ocupada pelo servidor PHP local, pare esse servidor
+com Ctrl+C antes de iniciar o container.
+
+5. Teste a conexao somente por leitura:
+
+   docker compose exec app php artisan banco:verificar
+
+6. Abra http://localhost:8000 para ver a pagina inicial do Laravel.
+   Ainda nao existem telas de cadastros ou Vue.
+
+OUTROS COMANDOS
+Ver estado: docker compose ps
+Ver erros: docker compose logs --tail=80 app
+Parar: docker compose stop
+Retomar: docker compose start
+Depois de mudar Dockerfile ou dependencias: docker compose up -d --build
+
+BANCO LOCAL
+host.docker.internal aponta do container para o Windows no Docker Desktop.
+O PostgreSQL precisa aceitar essa conexao. Pode ser necessario ajustar
+listen_addresses, pg_hba.conf ou firewall; ainda nao foram modificados.
+Se houver erro, envie a mensagem. Nao libere acesso para todos os enderecos.
+Nao execute migrations para resolver erro de conexao.
+
+LIMITES DESTA ETAPA
+Ambiente para desenvolvimento local, usando o servidor de desenvolvimento PHP.
+Nao e configuracao de producao e depende do banco existente no computador.
+Para entrega: preparar PostgreSQL em container e estrutura reproduzivel,
+alem de Vue, API, cadastros, relatorios, testes e demonstracao.
+
+Referencias:
+https://hub.docker.com/_/php
+https://docs.docker.com/desktop/features/networking/networking-how-tos/

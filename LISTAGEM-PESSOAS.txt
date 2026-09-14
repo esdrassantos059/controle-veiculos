@@ -1,0 +1,60 @@
+ETAPA: PRIMEIRA LISTAGEM DE PESSOAS COM LARAVEL E VUE
+
+FLUXO PARA ENTENDER
+1. Navegador abre /pessoas.
+2. routes/web.php devolve resources/views/pessoas.blade.php.
+3. O HTML carrega o JavaScript gerado pelo Vite e tem <div id="app">.
+4. resources/js/app.js monta o componente Pessoas.vue nessa div.
+5. O componente faz GET /api/pessoas usando fetch.
+6. routes/api.php encaminha a requisicao para PessoaController::index.
+7. O Controller usa o Model Pessoa e Eloquent para consultar PostgreSQL.
+8. Laravel devolve JSON; Vue preenche a tabela sem recarregar a pagina.
+
+EQUIVALENTE CONCEITUAL DA CONSULTA
+SELECT id, nome, genero, data_nascimento, email, telefone
+FROM esdras.pessoa ORDER BY nome, id LIMIT 10 OFFSET 0;
+Eloquent tambem conta o total para calcular a paginacao.
+Esta e uma consulta de cadastro; nao substitui os 12 relatorios exigidos.
+
+ENDPOINT (PRIMEIRA API DO PROJETO)
+Metodo: GET
+Caminho: /api/pessoas
+Parametro opcional: page, inteiro maior ou igual a 1; padrao 1.
+Resposta 200: objeto JSON com data (lista), current_page, last_page,
+per_page (10), total e metadados de navegacao.
+Campos de cada pessoa: id, nome, genero, data_nascimento, email, telefone.
+Resposta 422: parametro page invalido.
+Sem dados: data vazio, total 0.
+Nao ha autenticacao nesta etapa; o Compose publica somente em localhost.
+
+COMO ABRIR NO DOCKER
+Na pasta do projeto:
+docker compose up -d --build
+
+O Dockerfile agora compila Vue com Node em uma etapa separada.
+O volume PostgreSQL existente e preservado. Nenhuma migration e executada.
+Depois abrir http://localhost:8000/pessoas.
+Para ver o JSON diretamente: http://localhost:8000/api/pessoas.
+Se houver erro de consulta: docker compose logs --tail=80 app
+
+Como CSS/Vue sao compilados, mudancas na interface exigem reconstruir a
+imagem neste fluxo. Mais adiante podemos usar Vite dev para atualizacao rapida.
+
+O QUE A TELA FAZ
+- Lista nome, genero, nascimento, email e telefone.
+- Ordena por nome e pagina a cada 10 pessoas.
+- Mostra carregamento, lista vazia e erro com tentativa novamente.
+- Botao Atualizar lista refaz a consulta.
+- Em tela pequena, a tabela pode ser rolada horizontalmente.
+- Campos ausentes aparecem como Nao informado.
+- Ainda nao cadastra, edita ou exclui pessoas.
+
+TESTES
+Testes de API usam SQLite em memoria: nao acessam nem apagam PostgreSQL.
+Verificam ordenacao, paginacao, nulos, lista vazia e parametro invalido.
+Comando local: .\laravel-local.ps1 test
+Build: npm run build (tambem executado no build Docker).
+
+PROXIMAS ETAPAS
+Confirmar a tela no Docker com os registros reais, revisar restricoes
+pendentes de pessoa e depois implementar cadastro/validacao.

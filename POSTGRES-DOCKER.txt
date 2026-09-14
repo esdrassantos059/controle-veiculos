@@ -1,0 +1,49 @@
+POSTGRESQL NO DOCKER - PROXIMA ETAPA
+
+Configuracao preparada; inicio/importacao ainda precisam ser executados.
+O assistente nao consegue executar docker.exe nesta sessao do Windows.
+
+O banco original continua em ::1:5432, no Windows, sem alteracoes.
+O novo banco sera uma copia independente, em localhost:5433.
+Dentro do Docker, Laravel acessa db:5432, schema esdras.
+Os dois bancos NAO sincronizam alteracoes entre si.
+
+PREPARADO
+- Servico db usando PostgreSQL 18.
+- Volume postgres_data para persistir os dados.
+- Backup local docker/postgres/init/01-banco-local.sql, com estrutura,
+  dados e sequencias do schema esdras. Nao contem a senha de conexao.
+- Backup ignorado pelo Git e excluido da imagem Laravel por conter dados.
+- A senha e lida do .env pelo Compose, nao escrita no compose.yaml.
+- Laravel aguarda PostgreSQL pronto antes de iniciar.
+- Nenhuma migration Laravel e executada.
+
+EXECUTAR NA PASTA DO PROJETO
+1. docker compose config --quiet
+2. docker compose up -d
+3. docker compose exec app php artisan banco:verificar
+
+O primeiro inicio baixa PostgreSQL, cria o volume e importa o SQL.
+Esperado: banco controle_revisoes, schema esdras, mesmas contagens do original.
+Se houver erro, enviar a mensagem e executar:
+docker compose logs --tail=80 db
+
+O SQL inicial roda APENAS quando o volume esta vazio. Reiniciar nao duplica
+dados. Se a importacao falhar, nao apague o volume: primeiro analise o erro.
+Parar: docker compose stop
+Retomar: docker compose start
+Nao usar docker compose down -v: -v apaga o volume com os dados.
+
+PGADMIN (OPCIONAL, APOS CONFIRMAR IMPORTACAO)
+Cadastre outro servidor com nome Controle revisoes Docker:
+Host localhost, porta 5433, banco controle_revisoes, usuario postgres,
+mesma senha configurada localmente. Preserve a conexao original na porta 5432.
+
+PENDENCIAS
+- Confirmar build/inicio do novo servico, restauracao e contagens.
+- Testar persistencia apos reiniciar.
+- Revisar restricoes de pessoa, sem aplica-las automaticamente.
+- Mais adiante preparar estrutura versionada e dados ficticios para entrega,
+  sem depender deste backup privado.
+
+Referencia: https://hub.docker.com/_/postgres
