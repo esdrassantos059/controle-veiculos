@@ -21,6 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->report(function (Throwable $e): void {
+            if (getenv('VERCEL')) {
+                // Registra somente a origem do erro, sem SQL, senhas ou dados pessoais.
+                error_log(sprintf('[Laravel] %s at %s:%d', $e::class, basename($e->getFile()), $e->getLine()));
+            }
+        });
         $exceptions->render(function (QueryException $e, Request $request) {
             if (! $request->is('api/*')) {
                 return null;
