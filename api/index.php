@@ -29,4 +29,10 @@ if (getenv('VERCEL')) {
     $_SERVER['SERVER_PORT'] = '443';
 }
 
+// A pasta da funcao nao faz parte da URL base da aplicacao.
+// Sem isso, Symfony remove /api das rotas como /api/pessoas.
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
+$_SERVER['SCRIPT_FILENAME'] = __DIR__.'/../public/index.php';
+
 require __DIR__.'/../public/index.php';
